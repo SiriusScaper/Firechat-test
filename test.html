@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <!-- Firebase -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+
+    <!-- Firechat -->
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />
+    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
+</head>
+
+<body>
+    <style type="text/css">
+        #firechat-wrapper {
+            max-width: 25%;
+        }
+    </style>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: 'AIzaSyCMyjuKk5FjXyxYiKe4nLHP8cUsuT05MuQ',
+            authDomain: 'projectraptoreinstein-2de14.firebaseapp.com',
+            databaseURL: 'https://projectraptoreinstein-2de14.firebaseio.com',
+            projectId: 'projectraptoreinstein-2de14',
+            storageBucket: 'projectraptoreinstein-2de14.appspot.com',
+            messagingSenderId: '995042171648'
+        };
+        firebase.initializeApp(config);
+        function login() {
+            // Log the user in via Twitter
+            var provider = new firebase.auth.TwitterAuthProvider();
+            firebase.auth().signInWithPopup(provider).catch(function (error) {
+                console.log("Error authenticating user:", error);
+            });
+        }
+
+        firebase.auth().onAuthStateChanged(function (user) {
+            // Once authenticated, instantiate Firechat with the logged in user
+            if (user) {
+                initChat(user);
+            }
+        });
+
+        function initChat(user) {
+            // Get a Firebase Database ref
+            var chatRef = firebase.database().ref("chat");
+
+            // Create a Firechat instance
+            var chat = new FirechatUI(chatRef, document.getElementById("firechat-wrapper"));
+
+            // Set the Firechat user
+            chat.setUser(user.uid, user.displayName);
+        }
+    </script>
+
+    <div id="firechat-wrapper">
+    </div>
+</body>
+
+</html>
